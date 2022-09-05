@@ -2,7 +2,9 @@ package com.reinaldo.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,11 +24,11 @@ public class Pedido implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private Date instante;
-	
-	//Para nao dar erro de entidade transiente
+
+	// Para nao dar erro de entidade transiente
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -34,6 +36,9 @@ public class Pedido implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
+
+	// utilizado pra nao repetir itens
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Pedido() {
 		super();
@@ -87,6 +92,14 @@ public class Pedido implements Serializable {
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -103,7 +116,5 @@ public class Pedido implements Serializable {
 		Pedido other = (Pedido) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
+
 }
